@@ -1,6 +1,8 @@
 (REQUIRES LINUX AND DOCKER)
 
-Basic setup to get the z1 sim running with keyboard control under docker.
+Basic setup to get the z1 sim running with keyboard control under docker. Also compiles and runs c++ and python sdk samples.
+
+BASIC KEYBOARD MOVEMENT
 
 1. Build docker container using (this will take some time)
 	docker build -t z1_ros .
@@ -11,7 +13,7 @@ Basic setup to get the z1 sim running with keyboard control under docker.
 3. Run container using
 	docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it z1_ros
 
-4. Begin sim environment running
+4. In the container's terminal, begin sim environment by running
 	roslaunch unitree_gazebo z1.launch &
 
 5. Wait for GUI to load and show robot.
@@ -35,3 +37,7 @@ You should see:
 	Keyboard	Q/A	W/S	D/E	R/F	T/G	Y/H	up/down
 
 10. You should see it move in the sim. You can use the backtick again to return it to neutral position
+
+SDK USAGE
+
+You can also use the SDK to control the robot, located in /root/z1_sdk. The controller must be running in non-keyboard mode (./sim_ctrl) alongside the code samples.
