@@ -9,7 +9,9 @@ RUN apt install ros-melodic-controller-interface  ros-melodic-gazebo-ros-control
 
 # Deps to compile and run the python examples.
 # For some reason eigen is in the wrong place by default
-RUN apt install python3-pip -y && \
+RUN apt install python3-pip -y
+RUN pip3 install --upgrade pip setuptools wheel
+RUN pip3 install Cython && \
 	pip3 install pybind11 numpy && \
 	ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 

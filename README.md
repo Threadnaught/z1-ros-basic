@@ -16,7 +16,7 @@ A Docker container containing everything you need to get the Unitree Z1 robot ar
 
 3. Run container using
 ```
-	docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it z1_ros
+	docker run --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it z1_ros
 ```
 
 **NOTE:** the `-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix` allows the container to create a window on your host system.
@@ -70,7 +70,7 @@ You can also use the SDK to control the robot, located in /root/z1_sdk. The cont
 
 3. Launch the container
 ```
-	docker run --network=host -it z1_ros
+	docker run --rm --network=host -it z1_ros
 ```
 **NOTE:** the `--network=host` allows the container access to your host's network interfaces. Might have compatiblity issues with mac and especially windows.
 
