@@ -1,6 +1,8 @@
 FROM ros:melodic
 
-RUN apt update
+# Melodic image hasn't been changed for over a year. Lets give it a spring clean.
+RUN apt update && \
+	apt full-upgrade -y
 
 # Install basic ROS deps
 RUN apt install ros-melodic-controller-interface  ros-melodic-gazebo-ros-control ros-melodic-joint-state-controller ros-melodic-effort-controllers ros-melodic-joint-trajectory-controller ros-melodic-robot-state-publisher ros-melodic-xacro vim -y
@@ -50,3 +52,5 @@ RUN cd /root && \
 	make
 
 COPY setup_networking.sh /root/setup_networking.sh
+
+WORKDIR /root/
