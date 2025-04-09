@@ -19,7 +19,7 @@ A Docker container containing everything you need to get the Unitree Z1 robot ar
 	docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it z1_ros
 ```
 
-**NOTE:** the `-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix` allows the container to create a window on your host system. If the visualisation is all black, try resizing the window.
+**NOTE:** the `-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix` allows the container to create a window on your host system.
 
 4. In the container's terminal, begin sim environment by running
 ```
@@ -27,6 +27,8 @@ A Docker container containing everything you need to get the Unitree Z1 robot ar
 ```
 
 5. Wait for GUI to load and show robot.
+
+**NOTE:** If the visualisation is all black, try resizing the window.
 
 6. Hit enter on your terminal and you should see interactive control being given back to you.
 
