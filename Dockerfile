@@ -56,3 +56,7 @@ RUN cd /root && \
 COPY setup_networking.sh /root/setup_networking.sh
 
 WORKDIR /root/
+
+# Add a few useful commands to bash history to access with CTRL+R
+RUN echo "ping 192.168.123.110" >> /root/.bash_history && \
+	echo "cd /root/z1_controller/build/ && ./z1_ctrl" >> /root/.bash_history

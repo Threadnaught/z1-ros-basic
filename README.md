@@ -68,22 +68,22 @@ You can also use the SDK to control the robot, located in /root/z1_sdk. The cont
 
 2. Connect to the robot's primary ethernet jack through an external usb-ethernet connector on your PC. Connect the robot to power and stand well back.
 
-3. Launch the container
-```
-	docker run --rm --network=host -it z1_ros
-```
-**NOTE:** the `--network=host` allows the container access to your host's network interfaces. Might have compatiblity issues with mac and especially windows.
-
-4. Determine which interface your robot associated to using
+3. Determine which interface your robot associated to using
 ```
 	ip a
 ```
 It's usually the last one. For me it was `enp0s20f0u1u4`.
 
-5. Run network setup.
+4. Run network setup.
 ```
 	~/setup_networking.sh [INTERFACE]
 ```
+
+5. Launch the container
+```
+	docker run --rm --network=host -it z1_ros
+```
+**NOTE:** the `--network=host` allows the container access to your host's network interfaces. Might have compatiblity issues with mac and especially windows.
 
 When you see a repeated output like `64 bytes from 192.168.123.110: icmp_seq=1 ttl=255 time=0.323 ms` it's connected and you can exit out with `CTRL+C`
 
