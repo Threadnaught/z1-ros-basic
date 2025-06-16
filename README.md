@@ -79,13 +79,14 @@ It's usually the last one. For me it was `enp0s20f0u1u4`.
 	~/setup_networking.sh [INTERFACE]
 ```
 
+When you see a repeated output like `64 bytes from 192.168.123.110: icmp_seq=1 ttl=255 time=0.323 ms` it's connected and you can exit out with `CTRL+C`
+
 5. Launch the container
 ```
 	docker run --rm --network=host -it z1_ros
 ```
 **NOTE:** the `--network=host` allows the container access to your host's network interfaces. Might have compatiblity issues with mac and especially windows.
 
-When you see a repeated output like `64 bytes from 192.168.123.110: icmp_seq=1 ttl=255 time=0.323 ms` it's connected and you can exit out with `CTRL+C`
 
 6. Go into the sdk control directory.
 ```
