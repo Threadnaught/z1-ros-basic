@@ -1,0 +1,42 @@
+diff --git a/config/config.xml b/config/config.xml
+index f37c863..de66202 100644
+--- a/config/config.xml
++++ b/config/config.xml
+@@ -1,7 +1,7 @@
+ <configurartion>
+     <!-- lower computer communication -->
+-    <IP>192.168.123.110</IP>
+-    <Port>8881</Port>
++    <IP>192.168.123.238</IP>
++    <Port>8889</Port>
+ 
+     <collision>
+         <open>N</open> <!-- Y or N -->
+diff --git a/main.cpp b/main.cpp
+index 82243ba..854a8ce 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -45,7 +45,7 @@ int main(int argc, char **argv){
+     ctrlComp->ioInter = new IOUDP(ctrlComp->ctrl_IP.c_str(), ctrlComp->ctrl_port);
+     ctrlComp->geneObj();
+     if(ctrlComp->ctrl == Control::SDK){
+-        ctrlComp->cmdPanel = new ARMSDK(events, emptyAction, "127.0.0.1", 8072, 8071, 0.002);
++        ctrlComp->cmdPanel = new ARMSDK(events, emptyAction, "127.0.0.1", 8074, 8073, 0.002);
+     }else if(ctrlComp->ctrl == Control::KEYBOARD){
+         events.push_back(new StateAction("`", (int)ArmFSMStateName::BACKTOSTART));
+         events.push_back(new StateAction("1", (int)ArmFSMStateName::PASSIVE));
+diff --git a/unitreeArmTools.py b/unitreeArmTools.py
+index 994def6..e0af416 100644
+--- a/unitreeArmTools.py
++++ b/unitreeArmTools.py
+@@ -28,8 +28,8 @@ if __name__ == '__main__':
+         sys.exit(1)
+ 
+     server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+-    address = ("0.0.0.0", 8881)
+-    armAddr = ("192.168.123.110", 8880)
++    address = ("0.0.0.0", 8889)
++    armAddr = ("192.168.123.238", 8880)
+     server_socket.bind(address)
+     pack_format = struct.Struct('6B')
+ 
