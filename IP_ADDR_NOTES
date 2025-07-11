@@ -1,0 +1,21 @@
+This file is my scratchpad for working out which IP to put each arm on
+
+Default address: 192.168.123.110
+
+110 = 0b01101110
+
+ARM 1 SUBNET:
+
+0XXXXXXXX
+
+Arm 1 Host IP: 192.168.123.1/25
+Arm 1 Arm IP: 192.168.123.110
+
+ARM 2 SUBNET:
+
+1XXXXXXXX
+
+238 = 0b11101110
+
+Arm 2 Host IP: 192.168.123.129/25
+Arm 2 Arm IP: 192.168.123.238
