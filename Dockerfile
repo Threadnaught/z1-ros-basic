@@ -32,11 +32,19 @@ RUN cd /root/unitree_ws && \
 	/opt/ros/melodic/bin/catkin_make && \
 	echo "source ~/unitree_ws/devel/setup.bash" >> /root/.bashrc
 
+COPY second-arm-controller-setup.patch /root/
 # Clone into and build z1 controller
 RUN cd /root && \
 	. "/opt/ros/$ROS_DISTRO/setup.sh" && \
 	git clone https://github.com/unitreerobotics/z1_controller.git && \
+	cp -r z1_controller z1_controller_238 && \
 	cd z1_controller && \
+	mkdir build && \
+	cd build && \
+	cmake .. && \
+	make && \
+	cd ../../z1_controller_238 && \
+	git apply ../second-arm-controller-setup.patch && \
 	mkdir build && \
 	cd build && \
 	cmake .. && \
