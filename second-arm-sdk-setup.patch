@@ -1,0 +1,95 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7fcc6a2..2cc7007 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
+ project(z1_sdk)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++14 -pthread")
+ 
+diff --git a/examples_py/arm_python_interface.cpp b/examples_py/arm_python_interface.cpp
+index 067aa34..dbbc86e 100644
+--- a/examples_py/arm_python_interface.cpp
++++ b/examples_py/arm_python_interface.cpp
+@@ -9,6 +9,7 @@ class ArmInterface : public unitreeArm
+ {
+ public:
+     ArmInterface(bool hasGripper):unitreeArm(hasGripper){};
++    ArmInterface(CtrlComponents *ctrlComp):unitreeArm(ctrlComp){};
+     ~ArmInterface(){};
+     void loopOn() { sendRecvThread->start();}
+     void loopOff() { sendRecvThread->shutdown();}
+@@ -47,6 +48,13 @@ PYBIND11_MODULE(unitree_arm_interface, m){
+         .value("TRAJECTORY", ArmFSMState::TRAJECTORY)
+         .value("LOWCMD", ArmFSMState::LOWCMD)
+         ;
++    
++    py::enum_<BlockYN>(m, "BlockYN")
++        .value("YES", BlockYN::YES)
++        .value("NO", BlockYN::NO)
++        ;
++        
++    m.attr("RECVSTATE_LENGTH") = py::int_(RECVSTATE_LENGTH);
+ 
+     py::class_<LowlevelState>(m, "LowlevelState")
+         .def("getQ", &LowlevelState::getQ, rvp::reference_internal)
+@@ -56,12 +64,19 @@ PYBIND11_MODULE(unitree_arm_interface, m){
+         .def("getGripperQ", &LowlevelState::getGripperQ, rvp::reference_internal)
+         ;
+ 
++    py::class_<UDPPort>(m, "UDPPort")
++        .def(py::init<const std::string &, uint, uint, size_t, BlockYN, size_t>())
++    ;
++    
+     py::class_<CtrlComponents>(m, "CtrlComponents")
++        .def(py::init<double, bool>())
+         .def_readwrite("armModel", &CtrlComponents::armModel)
++        .def_readwrite("udp", &CtrlComponents::udp)
+         .def_readonly("dt", &CtrlComponents::dt)
+         ;
+ 
+     py::class_<Z1Model>(m, "Z1Model")
++        .def(py::init<>())
+         .def(py::init<Vec3, double, Vec3, Mat3>())
+         .def("checkInSingularity", &Z1Model::checkInSingularity)
+         .def("jointProtect", [](Z1Model& self, Vec6 q, Vec6 qd){
+@@ -88,6 +103,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
+ 
+     py::class_<ArmInterface>(m, "ArmInterface")
+         .def(py::init<bool>(), py::arg("hasGripper")=true)
++        .def(py::init<CtrlComponents*>())
+         .def_readwrite("q", &ArmInterface::q)
+         .def_readwrite("qd", &ArmInterface::qd)
+         .def_readwrite("tau", &ArmInterface::tau)
+diff --git a/examples_py/example_highcmd.py b/examples_py/example_highcmd.py
+index 7884a12..235e991 100644
+--- a/examples_py/example_highcmd.py
++++ b/examples_py/example_highcmd.py
+@@ -7,7 +7,12 @@ np.set_printoptions(precision=3, suppress=True)
+ 
+ print("Press ctrl+\ to quit process.")
+ 
+-arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
++# ctrlComp = unitree_arm_interface.CtrlComponents(0.002, True)
++TEST_VARIABLE = unitree_arm_interface.UDPPort("127.0.0.1", 8073, 8074, unitree_arm_interface.RECVSTATE_LENGTH, unitree_arm_interface.BlockYN.NO, 500000)
++# ctrlComp.armModel = unitree_arm_interface.Z1Model()
++# arm =  unitree_arm_interface.ArmInterface(ctrlComp)
++arm =  unitree_arm_interface.ArmInterface()
++arm._ctrlComp.udp = TEST_VARIABLE
+ armState = unitree_arm_interface.ArmFSMState
+ arm.loopOn()
+ 
+diff --git a/include/unitree_arm_sdk/control/ctrlComponents.h b/include/unitree_arm_sdk/control/ctrlComponents.h
+index 328a65c..b7b98f0 100644
+--- a/include/unitree_arm_sdk/control/ctrlComponents.h
++++ b/include/unitree_arm_sdk/control/ctrlComponents.h
+@@ -29,7 +29,7 @@ public:
+     double dt;// default: 0.002
+     SendCmd sendCmd; // udp command to control the arm
+     RecvState recvState; // the arm state receive from udp
+-    ArmModel* armModel;
++    Z1Model* armModel;
+     UDPPort *udp;
+ };
+ 
